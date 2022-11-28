@@ -1,13 +1,17 @@
-import { AuthProvider } from "@arcana/auth";
 import React from "react";
-const auth = new AuthProvider(process.env.NEXT_PUBLIC_ARCANA_APP_ID);
+export const AuthContext = React.createContext(null);
 
-const useArcanaAuth = () => {
+const ProvideAuth = ({ children, provider }) => {
+  const auth = useProvideAuth(provider);
+  return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
+};
+
+const useProvideAuth = (auth) => {
   const [loading, setLoading] = React.useState(true);
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const [availableLogins, setAvailableLogins] = React.useState([]);
   const [user, setUser] = React.useState(null);
-  const providerRef = React.useRef(null);
+  const providerRef = React.useRef(auth.provider);
 
   const loginWithSocial = async (p) => {
     await auth.init();
@@ -62,11 +66,19 @@ const useArcanaAuth = () => {
     loginWithLink,
     loginWithSocial,
     logout,
-    provider: auth.provider,
+    provider: providerRef.current,
     isLoggedIn,
     user,
     appId: auth.appId,
   };
 };
 
-export { useArcanaAuth };
+const useArcanaAuth = () => {
+  const context = React.useContext(AuthContext);
+  if (context == null) {
+    throw new Error("`useAuth` Hook must be used inside `ProvideAuth`");
+  }
+  return context;
+};
+
+export { useArcanaAuth, ProvideAuth };
