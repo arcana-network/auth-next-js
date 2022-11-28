@@ -1,5 +1,6 @@
 import React from "react";
-export const AuthContext = React.createContext(null);
+
+const AuthContext = React.createContext(null);
 
 const ProvideAuth = ({ children, provider }) => {
   const auth = useProvideAuth(provider);
@@ -27,6 +28,10 @@ const useProvideAuth = (auth) => {
     if (await auth.isLoggedIn()) {
       await auth.logout();
     }
+  };
+
+  const connect = async () => {
+    return await auth.connect();
   };
 
   const onConnectHook = async () => {
@@ -70,6 +75,7 @@ const useProvideAuth = (auth) => {
     isLoggedIn,
     user,
     appId: auth.appId,
+    connect,
   };
 };
 

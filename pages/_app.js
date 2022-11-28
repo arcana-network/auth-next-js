@@ -1,12 +1,18 @@
 import { getAuth } from "../auth/getArcanaAuth";
 import { ProvideAuth } from "../auth/useArcanaAuth";
+import Layout from "../components/layout";
+import { Sora } from "@next/font/google";
+
+const sora = Sora();
 
 const auth = getAuth();
 
 export default function App({ Component, pageProps }) {
   return (
     <ProvideAuth provider={auth}>
-      <Component {...pageProps} />
+      <Layout className={sora.className}>
+        <Component {...pageProps} />
+      </Layout>
     </ProvideAuth>
   );
 }
