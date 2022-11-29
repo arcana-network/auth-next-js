@@ -1,31 +1,37 @@
-import { useEffect, useState, useRef } from "react";
-import { InitializeAuth } from "../auth/init";
+import React from "react";
+import { useArcanaAuth } from "../auth/useArcanaAuth";
+import Loader from "../components/loader";
+import { Info } from "../components/info";
+import styles from "./index.module.css";
 
 export default function IndexPage() {
-  const authRef = useRef(null);
-  const [loaded, setLoaded] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false);
-  useEffect(() => {
-    InitializeAuth().then(async (auth) => {
-      setLoaded(true);
-      authRef.current = auth;
-      const isLoggedIn = await authRef.current.isLoggedIn();
-      setLoggedIn(isLoggedIn);
-    });
-  }, []);
+  const { user, connect, isLoggedIn, loading, loginWithSocial, provider } =
+    useArcanaAuth();
+  const onConnectClick = async () => {
+    try {
+      await connect();
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  const onConnect = () => {
+    console.log("connected");
+  };
+  React.useEffect(() => {
+    provider.on("connect", onConnect);
+    return () => {
+      provider.removeListener("connect", onConnect);
+    };
+  }, [provider]);
   return (
     <>
-      {!loaded && "Loading..."}
-      {loaded && (
-        <div>
-          IsLoggedIn: {loggedIn ? "Yes" : "No"}
-          {!loggedIn && (
-            <button onClick={() => authRef.current?.loginWithSocial("google")}>
-              Login With Google
-            </button>
-          )}
-        </div>
+      {loading && <Loader secondaryColor="#101010" strokeColor="#101010" />}
+      {!loading && !isLoggedIn && (
+        <button className={styles.Btn} onClick={onConnectClick}>
+          Connect
+        </button>
       )}
+      {!loading && isLoggedIn && <Info info={user} />}
     </>
   );
 }
