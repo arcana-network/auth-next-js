@@ -1,5 +1,5 @@
 import { getAuth } from "../auth/getArcanaAuth";
-import { ProvideAuth } from "../auth/useArcanaAuth";
+import { ProvideAuth } from "@arcana/auth-react";
 import Layout from "../components/layout";
 import { Sora } from "@next/font/google";
 
