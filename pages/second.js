@@ -33,17 +33,13 @@ export default function IndexPage() {
   }
 
   if (!isLoggedIn) {
-    return (
-      <button className={styles.Btn} onClick={onConnectClick}>
-        Connect
-      </button>
-    );
+    return <h2>Hi I am second page</h2>;
   }
   return (
     <>
       <Info info={user} />;
       <br />
-      <Link href="/second">Go to second page</Link>
+      <Link href="/">Go to first page</Link>
     </>
   );
 }

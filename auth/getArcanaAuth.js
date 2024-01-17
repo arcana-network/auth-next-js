@@ -1,9 +1,6 @@
 import { AuthProvider } from "@arcana/auth";
 
-const auth = new AuthProvider(process.env.NEXT_PUBLIC_ARCANA_APP_ID, {
-  theme: "light",
-  network: "dev",
-});
+const auth = new AuthProvider(process.env.NEXT_PUBLIC_ARCANA_APP_ID);
 
 const getAuth = () => {
   return auth;
